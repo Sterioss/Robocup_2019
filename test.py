@@ -18,7 +18,15 @@ triangle=False
 
 
 def bille():
-    
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1)  
+    tank.on_for_seconds(SpeedPercent(-30), SpeedPercent(10), 1,8)    
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1) 
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 0.5) 
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1,8) 
+    while us.value()/10 > 4:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1,8)#position collé coté droit après entrée dasn bon sens 
+
 
 def dejavu():
         if csL.value() == 5 or csR.value() == 5:
