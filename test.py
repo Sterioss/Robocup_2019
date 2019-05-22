@@ -55,10 +55,10 @@ def evitement():
 
 def noirD():
     if csR.value() == 1:
-        tank.on(SpeedPercent(40), SpeedPercent(-20))
+        tank.on(SpeedPercent(-40), SpeedPercent(20))
 def noirG():
     if csL.value() == 1:
-        tank.on(SpeedPercent(-20), SpeedPercent(40))
+        tank.on(SpeedPercent(20), SpeedPercent(-40))
 
 def follow():
     if csR.value() == 1 or csL.value() == 1:
@@ -68,15 +68,15 @@ def follow():
     elif csR.value()==3:
         csR.mode = 'RGB-RAW'
         if  13 <= csR.value() <= 16:
-            tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 0.5)
-            tank.on_for_seconds(SpeedPercent(20), SpeedPercent(0), 1.8)
+            tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 0.5)
+            tank.on_for_seconds(SpeedPercent(-20), SpeedPercent(0), 1.8)
         csR.mode = 'COL-COLOR'
 
     elif csL.value()==3:
         csL.mode = 'RGB-RAW'
         if 13 <= csL.value() <=16:
-            tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 0.5)
-            tank.on_for_seconds(SpeedPercent(0), SpeedPercent(20), 1.8) 
+            tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 0.5)
+            tank.on_for_seconds(SpeedPercent(0), SpeedPercent(-20), 1.8) 
         csL.mode = 'COL-COLOR'
 
     elif csL.value() == 5 or csR.value() == 5:
@@ -86,7 +86,7 @@ def follow():
         if us.value()/10 <= 4:
             print("evitement")
             evitement()
-        tank.on(SpeedPercent(7), SpeedPercent(7))
+        tank.on(SpeedPercent(-7), SpeedPercent(-7))
 
 
 
