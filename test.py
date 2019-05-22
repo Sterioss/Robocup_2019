@@ -4,47 +4,21 @@ from ev3dev.ev3 import *
 from ev3dev2.motor import *
 import time
 
-tank     = MoveTank(OUTPUT_A, OUTPUT_D)
+tank     = MoveTank(OUTPUT_A, OUTPUT_B)
 csL      = ColorSensor('in2')
 us       = UltrasonicSensor('in3')
 csR      = ColorSensor('in1')
 push     = "? nom du capteur push"
+leve     = "? nom du capteur push"
 csR.mode = 'COL-COLOR'
 csL.mode = 'COL-COLOR'
 isGreen  = 0
 us.mode  = 'US-DIST-CM'
+triangle=False
 
 
 def bille():
-    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(12), 1.8)
-    while us.value()/10 >= 4:
-        tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1)
-    tank.on_for_seconds(SpeedPercent(12), SpeedPercent(-5), 1.8)
-    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 0.5)
-    tank.on_for_seconds(SpeedPercent(12), SpeedPercent(-5), 1.8)
-    m.run_timed(time_sp=1000, speed_sp=-75)
-
-    while "bille en boucle":
-        while us.value()/10 >= 4:
-            tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1)
-        m.run_timed(time_sp=1000, speed_sp=75)
-        tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(12), 1.8)
-        tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 0.5)
-        tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(12), 1.8)
-        m.run_timed(time_sp=1000, speed_sp=-75)
-
-
-        if us.value()/10 <= 4:
-            tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(12), 1.8)
-
-            lever.on_for_seconds(SpeedPercent(-15), 1)
-            tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 8)
-
-            for second in range (10):
-               tank.on_for_seconds(SpeedPercent(30), SpeedPercent(30), 1)
-               tank.on_for_seconds(SpeePercent(-30), SpeedPercent(-30), 1)
-        else :
-            tank.on_for_seconds(SpeedPecent(-5), SpeedPercent(12), 1.8)
+    
 
 def dejavu():
         if csL.value() == 5 or csR.value() == 5:
@@ -61,23 +35,23 @@ def dejavu():
 
 def evitement():
     
-    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(-5), 1)
+    tank.on_for_seconds(SpeedPercent(5), SpeedPercent(5), 1)
     
-    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8)
+    tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(5), 1.8)
   
-    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 2)
+    tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 2)
  
-    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+    tank.on_for_seconds(SpeedPercent(5), SpeedPercent(-15), 1.8)
 
-    tank.on_for_seconds(SpeedPercent(20), SpeedPercent(20), 3)
+    tank.on_for_seconds(SpeedPercent(-20), SpeedPercent(-20), 3)
 
-    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+    tank.on_for_seconds(SpeedPercent(5), SpeedPercent(-15), 1.8)
 
-    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1.75)
+    tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 1.75)
 
-    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8)
+    tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(5), 1.8)
 
-    tank.on_for_seconds(SpeedPercent(-20), SpeedPercent(-20), 0.75)
+    tank.on_for_seconds(SpeedPercent(20), SpeedPercent(20), 0.75)
 
 def noirD():
     if csR.value() == 1:
