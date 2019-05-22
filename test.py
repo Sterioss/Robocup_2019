@@ -25,7 +25,8 @@ def bille():
     tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1,8) 
     while us.value()/10 > 4:
         tank.on(SpeedPercent(15), SpeedPercent(15))
-    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1,8)#position collé coté droit après entrée dasn bon sens 
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1,8)#position collé coté droit après entrée dasn bon sens
+    #trouver comment dtecter le triangle 
 
 
 def dejavu():
