@@ -1,0 +1,71 @@
+#!/usr/bin/env pybricks-micropython
+
+from pybricks import ev3brick as brick
+from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
+                                 InfraredSensor, UltrasonicSensor, GyroSensor)
+from pybricks.parameters import (Port, Stop, Direction, Button, Color,
+                                 SoundFile, ImageFile, Align)
+from pybricks.tools import print, wait, StopWatch
+from pybricks.robotics import DriveBase
+from time import sleep
+
+left_motor = Motor(Port.A)
+right_motor = Motor(Port.B)
+csL = ColorSensor(Port.S4)
+csR = ColorSensor(Port.S1)
+us=UltrasonicSensor(Port.S3)
+
+def forward(speed):
+    left_motor.run(speed)
+    right_motor.run(speed)
+
+def evitement():
+    print("beep")
+    left_motor.run(-1000)
+    right_motor.run(-1000)
+    #tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8)
+  
+    #tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 2)
+ 
+    #tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+
+    #tank.on_for_seconds(SpeedPercent(20), SpeedPercent(20), 3)
+
+    #tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+
+    #tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1.75)
+
+    #tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8)
+
+    #tank.on_for_seconds(SpeedPercent(-20), SpeedPercent(-20), 0.75)
+
+def follow(speed):
+    if csL.color() == 1 and not csR.color() == 1 and csR.color() != Color.GREEN:
+        right_motor.run(speed)
+        left_motor.run(-speed)
+    elif csR.color() == 1 and not csL.color() == 1 and csL .color() != Color.GREEN:
+        left_motor.run(speed)
+        right_motor.run(-speed)
+    
+    elif csR.color() == Color.GREEN:
+        right_motor.run((speed)*-5)
+        left_motor.run((speed) *5)
+        right_motor.run((speed)*3)
+        left_motor.run((speed) *3)
+
+    elif csL.color() == Color.GREEN:
+        right_motor.run((speed)*5)
+        left_motor.run((speed) *-5)
+        right_motor.run((speed)*3)
+        left_motor.run((speed) *3)
+
+    elif us.distance()/10 <= 4:
+        evitement()
+    
+    else:
+        forward(speed*1.1)
+
+
+
+while 1:
+    follow(125)
