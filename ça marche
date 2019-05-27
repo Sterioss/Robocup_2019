@@ -1,0 +1,43 @@
+#!/usr/bin/env pybricks-micropython
+
+from pybricks import ev3brick as brick
+from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
+                                 InfraredSensor, UltrasonicSensor, GyroSensor)
+from pybricks.parameters import (Port, Stop, Direction, Button, Color,
+                                 SoundFile, ImageFile, Align)
+from pybricks.tools import print, wait, StopWatch
+from pybricks.robotics import DriveBase
+from time import sleep
+
+left_motor = Motor(Port.A, Direction.CLOCKWISE)
+right_motor = Motor(Port.B, Direction.CLOCKWISE)
+csL = ColorSensor(Port.S4)
+csR = ColorSensor(Port.S1)
+
+
+def follow(speed):
+    if csL.color() == 1 and not csR.color() == 1:
+        right_motor.run((speed)*2)
+        left_motor.run((speed) * -2)
+    elif csR.color() == 1 and not csL.color() == 1:
+        left_motor.run((speed)*2)
+        right_motor.run((speed) * -2)
+    
+    elif csR.color() == Color.GREEN:
+        right_motor.run((speed)*-5)
+        left_motor.run((speed) *5)
+        
+        right_motor.run((speed)*0.5)
+        left_motor.run((speed) *0.5)
+    elif csL.color() == Color.GREEN:
+        right_motor.run((speed)*5)
+        left_motor.run((speed) *-5)
+        right_motor.run((speed)*0.5)
+        left_motor.run((speed) *0.5)
+
+    else:
+        right_motor.run(speed)
+        left_motor.run(speed)
+
+while 1:
+    follow(100)
