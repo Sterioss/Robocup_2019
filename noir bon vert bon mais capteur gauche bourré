@@ -53,24 +53,16 @@ def dejavu():
 
 
 def evitement():
-    
-    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(-5), 1)
-    
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
     tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8)
-  
     tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 2)
- 
     tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
-
     tank.on_for_seconds(SpeedPercent(20), SpeedPercent(20), 3)
-
     tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
-
     tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1.75)
-
     tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8)
-
-    tank.on_for_seconds(SpeedPercent(-20), SpeedPercent(-20), 0.75)
+    while usar.value()/10>4:   
+        tank.on(SpeedPercent(-20), SpeedPercent(-20))
 
 def noirD():
     if csR.value() == 1:
