@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+from ev3dev.ev3 import *
+
+from ev3dev2.motor import *
+import time
+
+
+lever = Motor(OUTPUT_B)#valeur negative pour monter
+porte = Motor(OUTPUT_C)#valeur positive pour ouvrir
+usav = UltrasonicSensor('in2')
+usar = UltrasonicSensor('in3')
+usav.mode = 'US-DIST-CM'
+usar.mode = 'US-DIST-CM'
+tank = MoveTank(OUTPUT_A, OUTPUT_D)
+
+def timer():
+   now = time.localtime(time.time())
+   return now[5]
+
+def bille():
+    while usav.value()/10>6:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 4)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+    while usav.value()/10>6:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)
+    while usav.value()/10>6:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)#coin a gauche de l'entrée
+    #savoir cb d'aller retour a faire
+
+bille()
