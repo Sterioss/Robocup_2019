@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+from ev3dev.ev3 import *
+
+from ev3dev2.motor import *
+import time
+
+tank     = MoveTank(OUTPUT_A, OUTPUT_D)
+csL      = ColorSensor('in1')
+csR      = ColorSensor('in4')
+csR.mode = 'COL-COLOR'
+csL.mode = 'COL-COLOR'
+lever = Motor(OUTPUT_B)#valeur negative pour monter
+porte = Motor(OUTPUT_C)#valeur positive pour ouvrir
+usav = UltrasonicSensor('in2')
+usar = UltrasonicSensor('in3')
+usav.mode = 'US-DIST-CM'
+usar.mode = 'US-DIST-CM'
+timerbase=0
+timertest=0
+
+def compte(sec):
+    time.sleep(1)
+    sec+=1
+    return(sec)
+
+def bille():
+    def bille():
+    while usav.value()/10>6:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 4)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+    while usav.value()/10>6:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)
+    while usav.value()/10>6:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+    tank.on_for_secrcent(15), SpeedPercent(15))
+    tank.on_for_secoonds(SpeedPercent(-5), SpeedPercent(15), 1.9)#coin a gauche de l'entrée
+    while usav.value()/10>6:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+        timerbase=compte(timerbase)
+    timerbase+=2
+    for i in range(10):
+        while usav.value()/10>6:
+            if timertest<timerbase:    
+                tank.on(SpeedPercent(15), SpeedPercent(15))
+                timertest=compte(timertest)
+                tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+                tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)
+                tank.on_for_seconds(SpeedPercent(10), SpeedPercent(10), 1)
+                tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)
+                lever.on(SpeedPercent(-50))
+                lever.on(SpeedPercent(50))
+            else :
+                tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+                tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 3.8)
+                while usar.value()/10<6:
+                    tank.on(SpeedPercent((-10),SpeedPercent(-10))
+                porte.on(SpeedPercent(50))
+                time.sleep(1)
+                porte.on(SpeedPercent(-50))
+
+def dejavu():
+        if csL.value() == 5 or csR.value() == 5:
+            Sound.tone(1500, 2000).wait()
+            bille()
+
+def evitement():
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8)
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 2)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+    tank.on_for_seconds(SpeedPercent(20), SpeedPercent(20), 3)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1.75)
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8)
+    while usar.value()/10>4:   
+        tank.on(SpeedPercent(-20), SpeedPercent(-20))
+
+def noirD():
+    if csR.value() == 1:
+        tank.on(SpeedPercent(40), SpeedPercent(-20))
+def noirG():
+    if csL.value() == 1:
+        tank.on(SpeedPercent(-20), SpeedPercent(40))
+
+def follow():
+    if csR.value() == 1 or csL.value() == 1:
+        noirG()
+        noirD()
+
+    elif csR.value()==3 and csL.value()!=3:
+        csR.mode = 'RGB-RAW'
+        if  5 <= csR.value() <= 8 or 13 <= csR.value() <= 16:
+            tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(-5), 0.5)
+            tank.on_for_seconds(SpeedPercent(20), SpeedPercent(0), 1.8)
+            tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 0.5)
+        csR.mode = 'COL-COLOR'
+    elif csL.value()==3 and csR.value()!=3:
+        csL.mode = 'RGB-RAW'
+        if 5 <= csL.value() <=8 or 13 <= csL.value() <= 16: #donne a chaque vert des valeurs différentes entre 6 et 91
+            tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(-5), 0.5)
+            tank.on_for_seconds(SpeedPercent(0), SpeedPercent(20), 1.8) 
+            tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 0.5)
+        csL.mode = 'COL-COLOR'
+
+    elif csL.value()==3 and csR.value==3:
+        csL.mode = 'RGB-RAW'
+        csR.mode = 'RGB-RAW'
+        if 5 <= csL.value() <=8 or 13 <= csL.value() <= 16 and 5 <= csR.value() <= 8 or 13 <= csR.value() <= 16:
+            tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(15), 3.8)
+        csL.mode = 'COL-COLOR'
+        csR.mode = 'COL-COLOR'
+
+    elif csL.value() == 5 or csR.value() == 5:
+        dejavu()
+
+    else:
+        if us.value()/10 <= 4:
+            print("evitement")
+            evitement()
+        tank.on(SpeedPercent(7), SpeedPercent(7))
+
+
+
+while 1:
+follow()
