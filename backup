@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+from ev3dev.ev3 import *
+from ev3dev2.motor import *
+import time
+
+tank     = MoveTank(OUTPUT_A, OUTPUT_D)
+csL      = ColorSensor('in1')
+csR      = ColorSensor('in4')
+csR.mode = 'COL-COLOR'
+csL.mode = 'COL-COLOR'
+usav = UltrasonicSensor('in2')
+#usar = UltrasonicSensor('in3')
+usav.mode = 'US-DIST-CM'
+#usar.mode = 'US-DIST-CM'
+#timerbase=0
+#timertest=0
+
+def compte(sec):#vestige de test
+    time.sleep(1)
+    sec+=1
+    return(sec)
+
+def bille():
+    sound.tone()
+    while usav.value()/10>4:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(-15), 4)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+    while usav.value()/10>4:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)
+    while usav.value()/10>4:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)#coin a gauche de l'entrée
+    while usav.value()/10>4:
+        tank.on(SpeedPercent(15), SpeedPercent(15))
+        timerbase=compte(timerbase)
+    timerbase+=2
+    for i in range(10):
+        while usav.value()/10>4:
+            if timertest<timerbase:    
+                tank.on(SpeedPercent(15), SpeedPercent(15))
+                timertest=compte(timertest)
+                tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+                tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)
+                tank.on_for_seconds(SpeedPercent(10), SpeedPercent(10), 1)
+                tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)
+                lever.on(SpeedPercent(-50))
+                lever.on(SpeedPercent(50))
+            else :
+                tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+                tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 3.8)
+                while usar.value()/10<4:
+                    tank.on(SpeedPercent(-10),SpeedPercent(-10))
+                porte.on(SpeedPercent(-50))
+                time.sleep(1)
+                porte.on(SpeedPercent(-50))
+
+def evitement():
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 2)
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.7)
+    #if usav.value()/10<4:
+    #    bille()
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.8)
+    tank.on_for_seconds(SpeedPercent(20), SpeedPercent(20), 4)
+    tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.9)
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 1.1)
+    tank.on_for_seconds(SpeedPercent(15), SpeedPercent(-5), 1.8) 
+    tank.on_for_seconds(SpeedPercent(-10), SpeedPercent(-10), 1)  
+
+def noirD():
+    if csR.value() == 1:
+        tank.on(SpeedPercent(20), SpeedPercent(-10))
+        if csR.value() == 1:
+            tank.on(SpeedPercent(20), SpeedPercent(-10))
+        elif csL.value() == 1:
+            tank.on(SpeedPercent(-10), SpeedPercent(20))
+def noirG():
+    if csL.value() == 1:
+        tank.on(SpeedPercent(-20), SpeedPercent(40))
+        if csR.value() == 1:
+            tank.on(SpeedPercent(20), SpeedPercent(-10))
+        elif csL.value() == 1:
+            tank.on(SpeedPercent(-10), SpeedPercent(20))
+
+def follow():
+    if csL.value()==3 and csR.value()==3:
+        sound.tone()
+        tank.on_for_seconds(SpeedPercent(-15), SpeedPercent(15), 1.8)    
+    
+    elif csL.value()==3 :
+        csL.mode = 'RGB-RAW'
+        if 13 <= csL.value() <=20:
+            tank.on_for_seconds(SpeedPercent(5), SpeedPercent(5), 0.5)
+            tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.6) 
+        csL.mode = 'COL-COLOR'
+    elif csR.value()==3:
+        csR.mode = 'RGB-RAW'
+        if 13 <= csR.value() <= 20:    
+            tank.on_for_seconds(SpeedPercent(5), SpeedPercent(5), 0.5)
+            tank.on_for_seconds(SpeedPercent(5), SpeedPercent(-15), 1.6) 
+        csR.mode = 'COL-COLOR'
+    #elif csR.value() == 1 and csL.value() == 1:                        # a tester
+     #   tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 0.5)
+
+    elif csR.value() == 1 or csL.value() == 1:
+        noirG()
+        noirD()
+
+    #elif csR.value() == 1 and csL.value() == 1:                        # a tester
+     #   tank.on_for_seconds(SpeedPercent(15), SpeedPercent(15), 0.5)
+    
+
+    elif csL.value()==3 :
+        csL.mode = 'RGB-RAW'
+        if 13 <= csL.value() <=20:
+            tank.on_for_seconds(SpeedPercent(5), SpeedPercent(5), 0.5)
+            tank.on_for_seconds(SpeedPercent(-5), SpeedPercent(15), 1.6) 
+        csL.mode = 'COL-COLOR'
+    elif csR.value()==3:
+        csR.mode = 'RGB-RAW'
+        if 13 <= csR.value() <= 20:    
+            tank.on_for_seconds(SpeedPercent(5), SpeedPercent(5), 0.5)
+            tank.on_for_seconds(SpeedPercent(5), SpeedPercent(-15), 1.6) 
+        csR.mode = 'COL-COLOR'
+    #elif csL.value() == 4 or csR.value() == 4:
+     #   csL.mode = 'RGB-RAW'
+      #  csR.mode = 'RGB-RAW'
+       # if  87 <= csL.value() <=100 or 87 <= csL.value() <= 100:
+        #    Sound.tone(1500, 2000).wait()
+         #   csL.mode = 'COL-COLOR'
+          #  csR.mode = 'COL-COLOR'
+           # bille()
+
+    else:
+        if usav.value()/10 <= 4:
+            evitement()
+        #if usar.value()/10<4:
+            #time.sleep(1)
+            #tank.on_for_seconds(SpeedPercent(100), SpeedPercent(100), 2)
+        tank.on(SpeedPercent(12), SpeedPercent(12))
+
+while 1:
+    follow()
